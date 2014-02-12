@@ -4,8 +4,8 @@
 
 *.pydevproject
 .project
-.prj
-.pui
+*.prj
+*.pui
 .metadata
 bin/
 tmp/
