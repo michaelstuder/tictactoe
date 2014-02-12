@@ -19,8 +19,73 @@
   </head>
   <body>
     <div id="content">
-      <h4>Tic Tac Toe</h3>
+      <h1>Tic Tac Toe</h1>
 
+      <div id="welcome">
+        <h2>Welcome</h2>
+        <p>Welcome to Tic Tac Toe.  The goal of this game is to get three of your &quot;marks&quot; in a row either horizontally, vertically or diagonally.</p>
+      </div>
+
+      <div id="options">
+        <h2>Game Options</h2>
+        <p>Please configure your game options below.  Click the &quot;Begin Game&quot; button when you are ready to play.</p>
+        <table class="options_table table-bordered table-condensed">
+          <tr class="options_row">
+            <td class="options_label">Your Marker</td>
+            <td class="options_data">
+              <input type="radio" name="player_marker" value="x" /> X
+              <input type="radio" name="player_marker" checked="true" value="o" /> O
+            </td>
+          </tr>
+          <tr class="options_row">
+            <td class="options_label">Who Goes First</td>
+            <td class="options_data">
+              <input type="radio" name="first_marker" value="x" /> X
+              <input type="radio" name="first_marker" value="o" /> O
+              <input type="radio" name="first_marker" checked="true" value="random" /> Random
+            </td>
+          </tr>
+          <tr class="options_row">
+            <td class="options_label">Difficulty</td>
+            <td class="options_data">
+              <select name="difficulty" id="difficulty">
+                <option value="90">Easy</option>
+                <option value="50">Moderate</option>
+                <option value="20">Difficult</option>
+                <option value="0">Impossible</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+        <button id="start_game" class="button">Begin Game</button>
+      </div>
+      
+      <div id="game">
+        <!-- I haven't used tables in forever! -->
+        <table border="1" class="board" id="board" cellspacing="0" cellpadding="1">
+          <tr id="row0" class="board_row">
+            <td id="row0col0" x="0" y="0" class="empty">&nbsp;</td>
+            <td id="row0col1" x="1" y="0" class="empty">&nbsp;</td>
+            <td id="row0col2" x="2" y="0" class="empty">&nbsp;</td>
+          </tr>
+          <tr id="row1" class="board_row">
+            <td id="row1col0" x="0" y="1" class="empty">&nbsp;</td>
+            <td id="row1col1" x="1" y="1" class="empty">&nbsp;</td>
+            <td id="row1col2" x="2" y="1" class="empty">&nbsp;</td>
+          </tr>
+          <tr id="row2" class="board_row">
+            <td id="row2col0" x="0" y="2" class="empty">&nbsp;</td>
+            <td id="row2col1" x="1" y="2" class="empty">&nbsp;</td>
+            <td id="row2col2" x="2" y="2" class="empty">&nbsp;</td>
+          </tr>
+        </table>
+      </div>
+      
+      <div id="game_over">
+        <button id="play_again" class="button">Play Again</button>
+      </div>
+
+      
     </div>
   </body>
 </html>
