@@ -24,7 +24,7 @@ $(document).ready(function() {
   // read game options and store locally
   var load_game_options = function() {
     game_options['player_marker'] = $('input[name=player_marker]:checked').val();
-    game_options['ai_marker'] = game_options['player_marker'] == 'x' ? 'o' : 'x';
+    game_options['ai_marker'] = opponent_marker(game_options['player_marker']);
     game_options['first_player'] = $('input[name=first_marker]:checked').val();
     game_options['difficulty'] = $('#difficulty').val();
     console.log('game options', game_options);
@@ -70,9 +70,9 @@ $(document).ready(function() {
   };
 
   // debugging to dump out the current state of the game to the console
-  var dump_game_board = function() {
-    for (y = 0; y < current_game_board.length; ++y) {
-      row = current_game_board[y];
+  var dump_game_board = function(board) {
+    for (y = 0; y < board.length; ++y) {
+      row = board[y];
       console.log(y, row.join(' '));
     }
   };
@@ -114,7 +114,7 @@ $(document).ready(function() {
     if (game_options['first_player'] === 'random') {
       game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
     }
-    current_turn = game_options['player_marker'] == game_options['first_player'] ? 'player' : 'ai';
+    current_turn = game_options['player_marker'] === game_options['first_player'] ? 'player' : 'ai';
 
     start_game();
   });
@@ -129,39 +129,25 @@ $(document).ready(function() {
   };
 
   // check to see if the givem marker has won the game
-  var is_winner = function(marker) {
+  var is_winner = function(board, marker) {
     // check diagonally
-    if (current_game_board[0][0] === marker && current_game_board[1][1] === marker && current_game_board[2][2] === marker) {
+    if (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) {
       return true;
     }
-    if (current_game_board[0][2] === marker && current_game_board[1][1] === marker && current_game_board[2][0] === marker) {
+    if (board[0][2] === marker && board[1][1] === marker && board[2][0] === marker) {
       return true;
     }
     for (i = 0; i < 3; ++i) {
       // check vertically
-      if (current_game_board[i][0] === marker && current_game_board[i][1] === marker && current_game_board[i][2] === marker) {
+      if (board[i][0] === marker && board[i][1] === marker && board[i][2] === marker) {
         return true;
       }
       // check horizontally
-      if (current_game_board[0][i] === marker && current_game_board[1][i] === marker && current_game_board[2][i] === marker) {
+      if (board[0][i] === marker && board[1][i] === marker && board[2][i] === marker) {
         return true;
       }
     }
     return false;
-  };
-
-  // check to see if all moves have been taken
-  var moves_remaining = function() {
-    var moves_remaining = 9;
-    for (y = 0; y < current_game_board.length; ++y) {
-      row = current_game_board[y];
-      for (x = 0; x < row.length; ++x) {
-        if (row[x] !== 'empty') {
-          moves_remaining--;
-        }
-      }
-    }
-    return moves_remaining;
   };
 
   // record a specific move for a given marker
@@ -169,20 +155,35 @@ $(document).ready(function() {
     current_game_board[y][x] = marker;
     render_game_board();
   };
+  
+  var player_loses = function() {
+    console.log('Player has lost!');
+    $('winner').html('Player');
+    game_record['losses']++;
+    end_game();
+  }
+
+  var player_draws = function() {
+    console.log('Game is a draw.');
+    $('winner').html('DRAW');
+    game_record['draws']++;
+    end_game();
+  }
+
+  var player_wins = function() {
+    console.log('Player has won!');
+    $('winner').html('Player');
+    game_record['wins']++;
+    end_game();
+  }
 
   // record a player move
   var player_move = function(y, x) {
     record_move(y, x, game_options['player_marker']);
-    if (is_winner(game_options['player_marker'])) {
-      // TODO: this
-      console.log('Player has won!');
-      game_record['wins']++;
-      end_game();
-    } else if (moves_remaining() === 0) {
-      // TODO: this
-      console.log('Game is a draw.');
-      game_record['draws']++;
-      end_game();
+    if (is_winner(current_game_board, game_options['player_marker'])) {
+      player_wins();
+    } else if (get_remaining_moves(current_game_board).length === 0) {
+      player_draws();
     } else {
       current_turn = 'ai';
       ai_take_turn();
@@ -201,54 +202,125 @@ $(document).ready(function() {
 
   // * * * * * * * * * * * * * * * * * * * //
   // Game moves - AI
+  var mm_max = 99
+  var mm_min = -mm_max;
 
-  // look at all available spaces remaining and select one at ramdom
-  var ai_make_random_move = function() {
-    var open_cells = [];
-    for (y = 0; y < current_game_board.length; ++y) {
-      row = current_game_board[y];
+  // check through a board and return a list of remaining moves
+  var get_remaining_moves = function(board) {
+    moves = [];
+    for (y = 0; y < board.length; ++y) {
+      row = board[y];
       for (x = 0; x < row.length; ++x) {
         if (row[x] === 'empty') {
-          open_cells.push([y,x]);
+          moves.push([y,x]);
         }
       }
     }
-    var move = open_cells[Math.floor((Math.random() * open_cells.length))];
+    return moves;
+  }
+
+  // look at all available spaces remaining and select one at ramdom
+  var ai_make_random_move = function() {
+    var moves = get_remaining_moves(current_game_board);
+    var move = moves[Math.floor((Math.random() * moves.length))];
     ai_move(move[0], move[1]);
   };
 
   // select the best possible move for the ai give the current board
   var ai_make_best_move = function() {
-    // TODO:  look ahead at all possible remaining moves and select the move with the best outcome
-    ai_make_random_move();
+    // first move can be random to keep things interesting
+    if (get_remaining_moves(current_game_board).length === 9) {
+      ai_make_random_move();
+    } else {
+      // look ahead at all possible remaining moves and select the move with the best outcome
+      var board_clone = current_game_board.slice(0);
+      move = find_best_move(board_clone, game_options['ai_marker'], 0, -mm_max, +mm_max);
+      ai_move(move[0], move[1]);
+    }
+  };
+
+  // get the mopponent's marker for the given marker
+  var opponent_marker = function(marker) {
+    return marker === 'x' ? 'o' : 'x';
+  }
+
+  // recursive search using alpha/beta pruning to determine the bext possible move for the given marker
+  var find_best_move = function(board, marker, depth, alpha, beta) {
+    // determine all possible moves remaining and if there are none we return a draw
+    var moves = get_remaining_moves(board);
+    if (moves.length === 0) {
+      return 0;
+    }
+
+    // if this board is a win scenario weight it best/worst dpending on which marker wins and how deep we are
+    // alpha is our best possible move, beta is our worst
+    if (is_winner(board, marker)) {
+      return 99 - depth;
+    } else if (is_winner(board, opponent_marker(marker))) {
+      return -99 + depth;
+    }
+
+    // keep track of the best move we can find
+    var best_move = [];
+
+    // loop over the currently available moves on the board
+    for (var i = 0; i < moves.length; i++) {
+      var move = moves[i];
+
+      // temporarily make the move
+      board[move[0]][move[1]] = marker;
+
+      // recursively get the best score from the child tree (opponents move is next)
+      // we invert alpha and beta here since the next move will be made by our opponent
+      var opponent_score = find_best_move(board, opponent_marker(marker), depth + 1, -beta, -alpha);
+
+      // revert the move
+      board[move[0]][move[1]] = 'empty';
+
+      // beta will be less than alpha if we've gone down a branch resulting in less than ideal play, 
+      // there's no point in exploring this branch so we can stop looking for results immediately.
+      // this prevents us from performing unnecessary computation resulting in a slow AI
+      if (beta < alpha) {
+        break;
+      }
+
+      // see if the inverse of the opponents score is in our favor, if so, set it as our new best path
+      if (-opponent_score > alpha) {
+        alpha = -opponent_score;
+        // if we're back up to the top level of the tree then we've found our best score, flag this as our best move
+        if (depth === 0) {
+          best_move = move;
+        }
+      }
+
+    }
+    // if we've made it back out of the recursion so we can return the best move we found
+    if (depth === 0) {
+      return best_move;
+    }
+
+    // if we're still traversing the tree we return the score for this depth
+    return alpha;
   };
 
   // record an AI move
   var ai_move = function(y, x) {
     record_move(y, x, game_options['ai_marker']);
-    if (is_winner(game_options['ai_marker'])) {
-      // TODO: this
-      console.log('AI has won!');
-      game_record['losses']++;
-      end_game();
-    } else if (moves_remaining() === 0) {
-      // TODO: this
-      console.log('Game is a draw.');
-      game_record['draws']++;
-      end_game();
+    if (is_winner(current_game_board, game_options['ai_marker'])) {
+      player_losess();
+    } else if (get_remaining_moves(current_game_board).length === 0) {
+      player_draws();
     } else {
       current_turn = 'player';
     }
   };
 
-  // let the AI take a turn
+  // AI takes a turn
   var ai_take_turn = function() {
     // simple AI based on difficulty, if some random number is less than our difficulty level select a random move, otherwise select the best move possible
     if (Math.floor((Math.random() * 100)) < game_options['difficulty']) {
-      console.log('ai making random move');
       ai_make_random_move();
     } else {
-      console.log('ai making best move');
       ai_make_best_move();
     }
   };
