@@ -238,6 +238,9 @@ $(document).ready(function() {
   // * * * * * * * * * * * * * * * * * * * //
   // Game moves - AI
 
+  // alpha/beta max (for scoring best moves)
+  var ab_max = 100;
+
   // check through a board and return a list of remaining moves
   var get_remaining_moves = function(board) {
     moves = [];
@@ -261,13 +264,13 @@ $(document).ready(function() {
 
   // select the best possible move for the ai give the current board
   var ai_make_best_move = function() {
-    // first move can be random to keep things interesting
+    // first move can be random to keep things interesting (otherwise the optimal move is always the center cell)
     if (get_remaining_moves(current_game_board).length === 9) {
       ai_make_random_move();
     } else {
       // look ahead at all possible remaining moves and select the move with the best outcome
       var board_clone = current_game_board.slice(0);
-      move = find_best_move(board_clone, game_options['ai_marker'], 0, -100, 100);
+      move = find_best_move(board_clone, game_options['ai_marker'], 0, -ab_max, ab_max);
       ai_move(move[0], move[1]);
     }
   };
@@ -285,12 +288,12 @@ $(document).ready(function() {
       return 0;
     }
 
-    // if this board is a win scenario weight it best/worst dpending on which marker wins and how deep we are
+    // if this board is a win scenario weigh it best/worst depending on which marker wins and how deep we are
     // alpha is our best possible move, beta is our worst
     if (is_winner(board, marker)) {
-      return 99 - depth;
+      return ab_max - depth;
     } else if (is_winner(board, opponent_marker(marker))) {
-      return -99 + depth;
+      return -ab_max + depth;
     }
 
     // keep track of the best move we can find
