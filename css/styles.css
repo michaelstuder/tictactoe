@@ -16,7 +16,7 @@ h4 { font-size: 1.2em; padding-bottom: 5px; }
 /* actual game board */
 #game { display: none; }
 .board { width: 300px; height: 300px; }
-.board td { width: 100px; height: 100px; text-align: center; font-size: 2em; }
+.board td { width: 100px; height: 100px; text-align: center; font-size: 4em; }
 
 .empty { background-image: none; cursor: 'pointer'; }
 .x { color: #b81c1c }

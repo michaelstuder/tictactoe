@@ -78,7 +78,6 @@ $(document).ready(function() {
   };
 
 
-
   // * * * * * * * * * * * * * * * * * * * //
   // starting/ending a game
 
@@ -92,9 +91,10 @@ $(document).ready(function() {
       ai_take_turn();
     }
   };
-  
+
   // end a game and show the "play again" options
   var end_game = function() {
+    console.log('stats', game_record);
     current_turn = 'none';
     $('#game_over').show();
   }
@@ -105,21 +105,21 @@ $(document).ready(function() {
     $('#game').hide();
     $('#game_over').hide();
   });
-    
+
   // begin game button click
   $('#start_game').on('click', function(e) {
     load_game_options();
 
     // see if we need to determine a random player to start
     if (game_options['first_player'] === 'random') {
-      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random()*2))];
+      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
     }
     current_turn = game_options['player_marker'] == game_options['first_player'] ? 'player' : 'ai';
 
     start_game();
   });
-  
-  
+
+
   // * * * * * * * * * * * * * * * * * * * //
   // keeping track of game moves & progress
 
@@ -127,7 +127,7 @@ $(document).ready(function() {
   var is_player_turn = function() {
     return (current_turn === 'player');
   };
-  
+
   // check to see if the givem marker has won the game
   var is_winner = function(marker) {
     // check diagonally
@@ -166,7 +166,6 @@ $(document).ready(function() {
 
   // record a specific move for a given marker
   var record_move = function(y, x, marker) {
-    console.log(y,x,marker);
     current_game_board[y][x] = marker;
     render_game_board();
   };
@@ -192,7 +191,7 @@ $(document).ready(function() {
 
   // player clicks empty cell
   $('.empty').on('click', function(e) {
-    if (is_player_turn()) {
+    if (is_player_turn() && $(this).hasClass('empty')) {
       player_move($(this).attr('y'), $(this).attr('x'));
     } else {
       console.log('not your turn!');
@@ -205,10 +204,17 @@ $(document).ready(function() {
 
   // look at all available spaces remaining and select one at ramdom
   var ai_make_random_move = function() {
-    // TODO:  go through entire board and select a random space to place our marker
-    var y = 0;
-    var x = 0;
-    ai_move(y, x);
+    var open_cells = [];
+    for (y = 0; y < current_game_board.length; ++y) {
+      row = current_game_board[y];
+      for (x = 0; x < row.length; ++x) {
+        if (row[x] === 'empty') {
+          open_cells.push([y,x]);
+        }
+      }
+    }
+    var move = open_cells[Math.floor((Math.random() * open_cells.length))];
+    ai_move(move[0], move[1]);
   };
 
   // select the best possible move for the ai give the current board
@@ -238,7 +244,7 @@ $(document).ready(function() {
   // let the AI take a turn
   var ai_take_turn = function() {
     // simple AI based on difficulty, if some random number is less than our difficulty level select a random move, otherwise select the best move possible
-    if (Math.floor((Math.random()*99)+1) < game_options['difficulty']) {
+    if (Math.floor((Math.random() * 100)) < game_options['difficulty']) {
       console.log('ai making random move');
       ai_make_random_move();
     } else {
@@ -246,5 +252,5 @@ $(document).ready(function() {
       ai_make_best_move();
     }
   };
-  
+
 });
