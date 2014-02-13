@@ -19,7 +19,7 @@ $(document).ready(function() {
     ['empty','empty','empty']
   ];
   // keep track of who's turn it currently is
-  var current_turn = 'player';
+  var current_player = 'no one';
 
   // read game options and store locally
   var load_game_options = function() {
@@ -59,6 +59,14 @@ $(document).ready(function() {
     }
   };
 
+  // render the current statistics
+  var render_stats = function() {
+    console.log('stats', game_record);
+    $.each(game_record, function(stat, value) {
+      $('#' + stat).html(value);
+    });
+  }
+
   // reset the game board
   var reset_game = function() {
     current_game_board = [
@@ -94,11 +102,11 @@ $(document).ready(function() {
 
   // end a game and show the "play again" options
   var end_game = function() {
-    console.log('stats', game_record);
-    current_turn = 'none';
+    set_player('no one');
+    render_stats();
     $('#game_over').show();
   }
-
+  
   // play again button click
   $('#play_again').on('click', function(e) {
     $('#options').show();
@@ -114,9 +122,27 @@ $(document).ready(function() {
     if (game_options['first_player'] === 'random') {
       game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
     }
-    current_turn = game_options['player_marker'] === game_options['first_player'] ? 'player' : 'ai';
-
+    
+    // set the current player
+    if (game_options['player_marker'] === game_options['first_player']) {
+      set_player('player');
+    } else {
+      set_player('ai');
+    }
+    
     start_game();
+  });
+  
+  // reset statistics button
+  $('#reset_stats').on('click', function(e) {
+    if (confirm('Click OK to reset your game statistics')) {
+      game_record = {
+        wins: 0,
+        losses: 0,
+        draws: 0
+      }
+      render_stats();
+    }
   });
 
 
@@ -125,7 +151,7 @@ $(document).ready(function() {
 
   // return whether or not it is the players turn
   var is_player_turn = function() {
-    return (current_turn === 'player');
+    return (current_player === 'player');
   };
 
   // check to see if the givem marker has won the game
@@ -156,6 +182,21 @@ $(document).ready(function() {
     render_game_board();
   };
   
+  // set who the current player is
+  var set_player = function(player) {
+    current_player = player;
+    $('#current_player').html(player + '\'s turn');
+  }
+  
+  // player win scenario
+  var player_wins = function() {
+    console.log('Player has won!');
+    $('winner').html('Player');
+    game_record['wins']++;
+    end_game();
+  }
+
+  // player lose scenario
   var player_loses = function() {
     console.log('Player has lost!');
     $('winner').html('Player');
@@ -163,17 +204,11 @@ $(document).ready(function() {
     end_game();
   }
 
+  // player draw scenario
   var player_draws = function() {
     console.log('Game is a draw.');
     $('winner').html('DRAW');
     game_record['draws']++;
-    end_game();
-  }
-
-  var player_wins = function() {
-    console.log('Player has won!');
-    $('winner').html('Player');
-    game_record['wins']++;
     end_game();
   }
 
@@ -185,7 +220,7 @@ $(document).ready(function() {
     } else if (get_remaining_moves(current_game_board).length === 0) {
       player_draws();
     } else {
-      current_turn = 'ai';
+      set_player('ai');
       ai_take_turn();
     }
   };
@@ -202,8 +237,6 @@ $(document).ready(function() {
 
   // * * * * * * * * * * * * * * * * * * * //
   // Game moves - AI
-  var mm_max = 99
-  var mm_min = -mm_max;
 
   // check through a board and return a list of remaining moves
   var get_remaining_moves = function(board) {
@@ -234,7 +267,7 @@ $(document).ready(function() {
     } else {
       // look ahead at all possible remaining moves and select the move with the best outcome
       var board_clone = current_game_board.slice(0);
-      move = find_best_move(board_clone, game_options['ai_marker'], 0, -mm_max, +mm_max);
+      move = find_best_move(board_clone, game_options['ai_marker'], 0, -100, 100);
       ai_move(move[0], move[1]);
     }
   };
@@ -307,22 +340,24 @@ $(document).ready(function() {
   var ai_move = function(y, x) {
     record_move(y, x, game_options['ai_marker']);
     if (is_winner(current_game_board, game_options['ai_marker'])) {
-      player_losess();
+      player_loses();
     } else if (get_remaining_moves(current_game_board).length === 0) {
       player_draws();
     } else {
-      current_turn = 'player';
+      set_player('player');
     }
   };
 
   // AI takes a turn
   var ai_take_turn = function() {
+    $('#thinking').show();
     // simple AI based on difficulty, if some random number is less than our difficulty level select a random move, otherwise select the best move possible
     if (Math.floor((Math.random() * 100)) < game_options['difficulty']) {
       ai_make_random_move();
     } else {
       ai_make_best_move();
     }
+    $('#thinking').hide()
   };
 
 });

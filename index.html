@@ -60,7 +60,12 @@
         <button id="start_game" class="button">Begin Game</button>
       </div>
 
+      <div id="game_over">
+        <button id="play_again" class="button">Play Again</button>
+      </div>
+
       <div id="game">
+        <div id="current_player"></div><div id="thinking">AI is thinking...</div>
         <table border="1" class="board" id="board" cellspacing="0" cellpadding="1">
           <tr id="row0" class="board_row">
             <td id="row0col0" x="0" y="0" class="empty">&nbsp;</td>
@@ -80,8 +85,23 @@
         </table>
       </div>
 
-      <div id="game_over">
-        <button id="play_again" class="button">Play Again</button>
+      <div id="stats">
+        <h2>Your Stats</h2>
+        <table class="stats_table table-bordered table-condensed">
+          <tr class="stats_row">
+            <td class="stats_label">Wins</td>
+            <td id="wins" class="stats_data">0</td>
+          </tr>
+          <tr class="stats_row">
+            <td class="stats_label">Losses</td>
+            <td id="losses" class="stats_data">0</td>
+          </tr>
+          <tr class="stats_row">
+            <td class="stats_label">Draws</td>
+            <td id="draws" class="stats_data">0</td>
+          </tr>
+        </table>
+        <button id="reset_stats" class="button">Reset Stats</button>
       </div>
 
 
