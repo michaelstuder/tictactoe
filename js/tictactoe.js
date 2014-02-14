@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
   // game options object
   var game_options = {
     first_player: 'x',
@@ -27,7 +28,7 @@ $(document).ready(function() {
     game_options['ai_marker'] = opponent_marker(game_options['player_marker']);
     game_options['first_player'] = $('input[name=first_marker]:checked').val();
     game_options['difficulty'] = $('#difficulty').val();
-    console.log('game options', game_options);
+    $('#current_difficulty').html('Opponent difficulty: ' + $('#difficulty option:selected').text());
   };
 
 
@@ -61,7 +62,6 @@ $(document).ready(function() {
 
   // render the current statistics
   var render_stats = function() {
-    console.log('stats', game_record);
     $.each(game_record, function(stat, value) {
       $('#' + stat).html(value);
     });
@@ -91,8 +91,22 @@ $(document).ready(function() {
 
   // start a new game
   var start_game = function() {
+    // load the game options
+    load_game_options();
+
+    // see if we need to determine a random player to start
+    if (game_options['first_player'] === 'random') {
+      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
+    }
+
+    // set the current player
+    if (game_options['player_marker'] === game_options['first_player']) {
+      set_player('player');
+    } else {
+      set_player('ai');
+    }
+
     reset_game();
-    $('#options').hide();
     $('#game').show();
 
     if (!is_player_turn()) {
@@ -104,35 +118,22 @@ $(document).ready(function() {
   var end_game = function() {
     set_player('no one');
     render_stats();
-    $('#game_over').show();
+    $('#game_over_modal').modal('show');
   }
-  
+
   // play again button click
-  $('#play_again').on('click', function(e) {
-    $('#options').show();
-    $('#game').hide();
-    $('#game_over').hide();
+  $('#show_game_options').on('click', function(e) {
+    $('#game_options_modal').modal('show');
   });
 
   // begin game button click
-  $('#start_game').on('click', function(e) {
-    load_game_options();
+  $(document).on('click', '.start_game', function(e) {
+    $('#game_options_modal').modal('hide');
+    $('#game_over_modal').modal('hide');
 
-    // see if we need to determine a random player to start
-    if (game_options['first_player'] === 'random') {
-      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
-    }
-    
-    // set the current player
-    if (game_options['player_marker'] === game_options['first_player']) {
-      set_player('player');
-    } else {
-      set_player('ai');
-    }
-    
     start_game();
   });
-  
+
   // reset statistics button
   $('#reset_stats').on('click', function(e) {
     if (confirm('Click OK to reset your game statistics')) {
@@ -181,33 +182,38 @@ $(document).ready(function() {
     current_game_board[y][x] = marker;
     render_game_board();
   };
-  
+
   // set who the current player is
   var set_player = function(player) {
     current_player = player;
-    $('#current_player').html(player + '\'s turn');
+    var message = current_player === 'ai' ? "Opponent's turn!" : "Your turn!";
+    message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game">Play Again</a>' : message;
+    $('#current_player').html(message);
   }
-  
+
   // player win scenario
   var player_wins = function() {
-    console.log('Player has won!');
-    $('winner').html('Player');
+    $('#game_over_icon').html('<span class="glyphicon glyphicon-thumbs-up"></span>');
+    $('#game_over_title').html('You won!');
+    $('#game_over_message').html('Congratulations!  Why don\'t you try against a harder opponent?');
     game_record['wins']++;
     end_game();
   }
 
   // player lose scenario
   var player_loses = function() {
-    console.log('Player has lost!');
-    $('winner').html('Player');
+    $('#game_over_icon').html('<span class="glyphicon glyphicon-thumbs-down"></span>');
+    $('#game_over_title').html('You lost...');
+    $('#game_over_message').html('Better luck next time.  Did you know that if played properly it is impossible to lose a game of tic-tac-toe? (Though it is still possible to end in a draw.)');
     game_record['losses']++;
     end_game();
   }
 
   // player draw scenario
   var player_draws = function() {
-    console.log('Game is a draw.');
-    $('winner').html('DRAW');
+    $('#game_over_icon').html('<span class="glyphicon glyphicon-random"></span>');
+    $('#game_over_title').html('Draw');
+    $('#game_over_message').html('You almost had em!  To your defense, when played properly, every single game of tic-tac-toe will end in a draw.');
     game_record['draws']++;
     end_game();
   }
@@ -230,7 +236,7 @@ $(document).ready(function() {
     if (is_player_turn() && $(this).hasClass('empty')) {
       player_move($(this).attr('y'), $(this).attr('x'));
     } else {
-      console.log('not your turn!');
+      alert('It is not your turn!');
     }
   });
 
@@ -313,7 +319,7 @@ $(document).ready(function() {
       // revert the move
       board[move[0]][move[1]] = 'empty';
 
-      // beta will be less than alpha if we've gone down a branch resulting in less than ideal play, 
+      // beta will be less than alpha if we've gone down a branch resulting in less than ideal play,
       // there's no point in exploring this branch so we can stop looking for results immediately.
       // this prevents us from performing unnecessary computation resulting in a slow AI
       if (beta < alpha) {
@@ -362,5 +368,8 @@ $(document).ready(function() {
     }
     $('#thinking').hide()
   };
+
+  // once the page has loaded start a game with the default settings
+  start_game();
 
 });

@@ -1,33 +1,19 @@
 /* general styles */
-#content { padding: 20px; }
-h1 { font-size: 2.0em; font-weight: bold; padding-bottom: 10px; }
-h2 { font-size: 1.6em; padding-bottom: 5px; }
-h3 { font-size: 1.4em; padding-bottom: 5px; }
-h4 { font-size: 1.2em; padding-bottom: 5px; }
-
-
-/* game options */
-#options { display: block; }
-.options_table { margin-left: 20px; }
-.options_label { padding-right: 10px; height: 24px; }
-#start_game { margin-top: 20px; margin-left: 20px; }
-
-
-/* game statistics */
-#stats { display: block; }
-.stats_table { margin-left: 20px; }
-.stats_label { padding-right: 10px; height: 24px; }
-#reset_stats { margin-top: 20px; margin-left: 20px; }
+#content { padding: 10px; margin-top: 50px; }
+h1 { font-size: 2.0em; font-weight: bold; margin-bottom: 10px; }
+h2 { font-size: 1.6em; margin-bottom: 5px; margin-top: 5px; }
+h3 { font-size: 1.4em; margin-bottom: 5px; }
+h4 { font-size: 1.2em; margin-bottom: 5px; }
 
 
 /* actual game board */
 #game { display: none; margin-top: 20px; }
 .board { width: 300px; height: 300px; }
 .board td { width: 100px; height: 100px; text-align: center; font-size: 4em; }
+#current_player, #current_difficulty { text-align: center; }
 
 .empty { background-image: none; cursor: 'pointer'; }
 .x { color: #b81c1c }
 .o { color: #16a939 }
 
-#game_over { margin-top: 20px; display: none; }
 #thinking { display: none; }

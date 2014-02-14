@@ -18,55 +18,54 @@
     <link rel="stylesheet" href="css/styles.css">
   </head>
   <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Tic Tac Toe</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="divider-vertical"></li>
+            <li><a href="#" class="start_game"><span class="glyphicon glyphicon-play"></span> New Game</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-stats"></span> Stats <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><span id="wins" class="label label-success pull-right">0</span><span class="glyphicon glyphicon-thumbs-up"></span> Wins</a></li>
+                <li><a href="#"><span id="losses" class="label label-danger pull-right">0</span><span class="glyphicon glyphicon-thumbs-down"></span> Losses</a></li>
+                <li><a href="#"><span id="draws" class="label label-default pull-right">0</span><span class="glyphicon glyphicon-random"></span> Draws</a></li>
+                <li class="divider"></li>
+                <li><a id="reset_stats" href="#"><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" id="show_game_options"><span class="glyphicon glyphicon-cog"></span> Settings</button></a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
     <div id="content">
-      <h1>Tic Tac Toe</h1>
-
       <div id="welcome">
-        <h2>Welcome</h2>
-        <p>Welcome to Tic Tac Toe.  The goal of this game is to get three of your &quot;marks&quot; in a row either horizontally, vertically or diagonally.</p>
-      </div>
-
-      <div id="options">
-        <h2>Game Options</h2>
-        <p>Please configure your game options below.  Click the &quot;Begin Game&quot; button when you are ready to play.</p>
-        <table class="options_table table-bordered table-condensed">
-          <tr class="options_row">
-            <td class="options_label">Your Marker</td>
-            <td class="options_data">
-              <input type="radio" name="player_marker" value="x" /> X
-              <input type="radio" name="player_marker" checked="true" value="o" /> O
-            </td>
-          </tr>
-          <tr class="options_row">
-            <td class="options_label">Who Goes First</td>
-            <td class="options_data">
-              <input type="radio" name="first_marker" checked="true" value="x" /> X
-              <input type="radio" name="first_marker" value="o" /> O
-              <input type="radio" name="first_marker" value="random" /> Random
-            </td>
-          </tr>
-          <tr class="options_row">
-            <td class="options_label">Difficulty</td>
-            <td class="options_data">
-              <select name="difficulty" id="difficulty">
-                <option value="90">Easy</option>
-                <option value="50">Moderate</option>
-                <option value="20">Difficult</option>
-                <option selected value="0">Impossible</option>
-              </select>
-            </td>
-          </tr>
-        </table>
-        <button id="start_game" class="button">Begin Game</button>
-      </div>
-
-      <div id="game_over">
-        <button id="play_again" class="button">Play Again</button>
+        <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h2><span class="glyphicon glyphicon-comment"></span> Welcome</h2>
+          <p>Welcome to Tic Tac Toe.  The goal of this game is to get three of your &quot;marks&quot; in a row either horizontally, vertically or diagonally.</p>
+          <p>You can configure game options and view your statistics in the navigation bar at the top of the page.</p>
+        </div>
       </div>
 
       <div id="game">
-        <div id="current_player"></div><div id="thinking">AI is thinking...</div>
         <table border="1" class="board" id="board" cellspacing="0" cellpadding="1">
+          <thead><th id="current_player" colspan="3"></th></thead>
           <tr id="row0" class="board_row">
             <td id="row0col0" x="0" y="0" class="empty">&nbsp;</td>
             <td id="row0col1" x="1" y="0" class="empty">&nbsp;</td>
@@ -82,29 +81,77 @@
             <td id="row2col1" x="1" y="2" class="empty">&nbsp;</td>
             <td id="row2col2" x="2" y="2" class="empty">&nbsp;</td>
           </tr>
+          <tfoot><th id="current_difficulty" colspan="3">Easy</th></tfoot>
         </table>
       </div>
-
-      <div id="stats">
-        <h2>Your Stats</h2>
-        <table class="stats_table table-bordered table-condensed">
-          <tr class="stats_row">
-            <td class="stats_label">Wins</td>
-            <td id="wins" class="stats_data">0</td>
-          </tr>
-          <tr class="stats_row">
-            <td class="stats_label">Losses</td>
-            <td id="losses" class="stats_data">0</td>
-          </tr>
-          <tr class="stats_row">
-            <td class="stats_label">Draws</td>
-            <td id="draws" class="stats_data">0</td>
-          </tr>
-        </table>
-        <button id="reset_stats" class="button">Reset Stats</button>
-      </div>
-
 
     </div>
+
+    <div class="modal fade" id="game_over_modal" tabindex="-1" role="dialog" aria-labelledby="Game Over" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><span id="game_over_icon"></span> Game Over</h4>
+          </div>
+          <div class="modal-body">
+            <h2 id="game_over_title"></h2>
+            <p id="game_over_message"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="play_again" class="start_game btn btn-primary">Play Again</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="game_options_modal" tabindex="-1" role="dialog" aria-labelledby="Game Options" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-cog"></span> Game Options</h4>
+          </div>
+          <div class="modal-body">
+            <div id="options">
+              <p>Please configure your game options below.</p>
+              <table class="options_table table">
+                <tr class="options_row">
+                  <td class="options_label">Your Marker:</td>
+                  <td class="options_data">
+                    <input type="radio" name="player_marker" checked="true" value="x" /> X
+                    <input type="radio" name="player_marker" value="o" /> O
+                  </td>
+                </tr>
+                <tr class="options_row">
+                  <td class="options_label">Who Goes First?</td>
+                  <td class="options_data">
+                    <input type="radio" name="first_marker" value="x" /> X
+                    <input type="radio" name="first_marker" value="o" /> O
+                    <input type="radio" name="first_marker" checked="true" value="random" /> Random
+                  </td>
+                </tr>
+                <tr class="options_row">
+                  <td class="options_label">AI Difficulty:</td>
+                  <td class="options_data">
+                    <select name="difficulty" id="difficulty">
+                      <option value="50">Easy</option>
+                      <option value="25">Moderate</option>
+                      <option value="10">Difficult</option>
+                      <option selected value="0">Impossible</option>
+                    </select>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="play_again" class="start_game btn btn-primary">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
