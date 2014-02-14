@@ -1,3 +1,17 @@
+This is a simple web-based Tic-Tac-Toe game implemented in JavaScript.  It utilizes Bootstrap (http://www.getbootstrap.com) and jQuery (http://jquery.com/) on the front-end and has a JavaScript back-end.
+
+The challenge with this project was to create an interactive game experience in which the AI could never lose.
+
+This was accomplished by utilizing a minimax algorithm (http://en.wikipedia.org/wiki/Minimax) to explore at all possible future moves for a given board/player minimizing loss and maximizing gains.
+
+In addition to the minimax algorithm, I also implemented alpha/beta pruning (http://en.wikipedia.org/wiki/Alpha-beta_pruning) to greatly reduce computational times.  When examining any given game path, if the result is less than ideal play the entire traversal of that path is abandoned eliminating fruitless computation only to arrive at a better game path elsewhere.
+
+A working demonstration of this game can be found here:  http://michael.studer.us/tictactoe
+
+
+---
+Original README from coxmediagroup:
+
 Intructions:
 1. Fork this repo on GitHub
 2. Create a program that can interactively play the game of Tic-Tac-Toe against a human player and never lose.

@@ -254,7 +254,7 @@ $(document).ready(function() {
   var player_draws = function() {
     $('#game_over_icon').html('<span class="glyphicon glyphicon-random"></span>');
     $('#game_over_title').html('Draw');
-    $('#game_over_message').html('You almost had em!  To your defense, when played properly, every single game of tic-tac-toe will end in a draw.');
+    $('#game_over_message').html('You almost had em!  In your defense, when played properly, every single game of tic-tac-toe will end in a draw.');
     game_record['draws']++;
     end_game();
   }
