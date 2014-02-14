@@ -28,7 +28,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Tic Tac Toe</a>
+         <a class="navbar-brand" href="#">Tic Tac Toe</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -65,7 +65,10 @@
 
       <div id="game">
         <table border="1" class="board" id="board" cellspacing="0" cellpadding="1">
-          <thead><th id="current_player" colspan="3"></th></thead>
+          <thead>
+            <th nowrap="true">You are: <span id="player_marker_display"></span></th>  
+            <th id="current_player" colspan="2"></th>
+          </thead>
           <tr id="row0" class="board_row">
             <td id="row0col0" x="0" y="0" class="empty">&nbsp;</td>
             <td id="row0col1" x="1" y="0" class="empty">&nbsp;</td>
@@ -137,9 +140,9 @@
                   <td class="options_data">
                     <select name="difficulty" id="difficulty">
                       <option value="50">Easy</option>
-                      <option value="25">Moderate</option>
-                      <option value="10">Difficult</option>
-                      <option selected value="0">Impossible</option>
+                      <option value="20">Moderate</option>
+                      <option selected value="10">Difficult</option>
+                      <option value="0">Impossible</option>
                     </select>
                   </td>
                 </tr>

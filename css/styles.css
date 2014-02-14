@@ -5,12 +5,11 @@ h2 { font-size: 1.6em; margin-bottom: 5px; margin-top: 5px; }
 h3 { font-size: 1.4em; margin-bottom: 5px; }
 h4 { font-size: 1.2em; margin-bottom: 5px; }
 
-
 /* actual game board */
 #game { display: none; margin-top: 20px; }
 .board { width: 300px; height: 300px; }
 .board td { width: 100px; height: 100px; text-align: center; font-size: 4em; }
-#current_player, #current_difficulty { text-align: center; }
+.board th { text-align: center; color: #5e5e5e; background-color: #f8f8f8; }
 
 .empty { background-image: none; cursor: 'pointer'; }
 .x { color: #b81c1c }

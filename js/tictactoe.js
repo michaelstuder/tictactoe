@@ -29,6 +29,9 @@ $(document).ready(function() {
     game_options['first_player'] = $('input[name=first_marker]:checked').val();
     game_options['difficulty'] = $('#difficulty').val();
     $('#current_difficulty').html('Opponent difficulty: ' + $('#difficulty option:selected').text());
+    $('#player_marker_display').html(game_options['player_marker'].toUpperCase());
+    $('#player_marker_display').removeClass(game_options['ai_marker']);
+    $('#player_marker_display').addClass(game_options['player_marker']);
   };
 
 
@@ -186,7 +189,7 @@ $(document).ready(function() {
   // set who the current player is
   var set_player = function(player) {
     current_player = player;
-    var message = current_player === 'ai' ? "Opponent's turn!" : "Your turn!";
+    var message = current_player === 'ai' ? "Opponent is thinking..." : "It is your turn!";
     message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game">Play Again</a>' : message;
     $('#current_player').html(message);
   }
@@ -233,8 +236,12 @@ $(document).ready(function() {
 
   // player clicks empty cell
   $('.empty').on('click', function(e) {
-    if (is_player_turn() && $(this).hasClass('empty')) {
-      player_move($(this).attr('y'), $(this).attr('x'));
+    if (is_player_turn()) {
+      if ($(this).hasClass('empty')) {
+        player_move($(this).attr('y'), $(this).attr('x'));
+      } else {
+        alert('This space is already taken!');
+      }
     } else {
       alert('It is not your turn!');
     }
@@ -362,14 +369,12 @@ $(document).ready(function() {
 
   // AI takes a turn
   var ai_take_turn = function() {
-    $('#thinking').show();
     // simple AI based on difficulty, if some random number is less than our difficulty level select a random move, otherwise select the best move possible
     if (Math.floor((Math.random() * 100)) < game_options['difficulty']) {
       ai_make_random_move();
     } else {
       ai_make_best_move();
     }
-    $('#thinking').hide()
   };
 
   // once the page has loaded start a game with the default settings
