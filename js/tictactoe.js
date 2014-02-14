@@ -187,7 +187,7 @@ $(document).ready(function() {
   var set_player = function(player) {
     current_player = player;
     var message = current_player === 'ai' ? "Opponent is thinking..." : "It is your turn!";
-    message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game">Play Again</a>' : message;
+    message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game ga" ga-cat="link" ga-label="tictactoe gameover board play again">Play Again</a>' : message;
     $('#current_player').html(message);
   }
 

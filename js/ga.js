@@ -6,12 +6,12 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-33492470-2', {
   'cookieDomain': 'none'
 });
-//ga('send', 'pageview');
+ga('send', 'pageview');
 
 $(document).ready(function() {
   // global google analytics event tracker
   $(document).on('click', '.ga', function(e) {
     console.log('ga-debug', 'click', $(this).attr('ga-cat'), $(this).attr('ga-label'));
-    //ga('send', 'event', $(e.currentTarget).attr('ga-cat'), 'click', $(e.currentTarget).attr('ga-label'));
+    ga('send', 'event', $(e.currentTarget).attr('ga-cat'), 'click', $(e.currentTarget).attr('ga-label'));
   });
 });

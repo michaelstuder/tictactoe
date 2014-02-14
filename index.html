@@ -28,28 +28,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Tic Tac Toe</a>
+          <a class="navbar-brand ga" ga-cat="link" ga-label="tictactoe navbar title" href="#">Tic Tac Toe</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="divider-vertical"></li>
-            <li><a href="#" class="start_game"><span class="glyphicon glyphicon-play"></span> New Game</a></li>
-            <li><a href="#" id="show_game_options"><span class="glyphicon glyphicon-cog"></span> Settings</button></a></li>
+            <li><a href="#" class="start_game ga" ga-cat="link" ga-label="tictactoe navbar play"><span class="glyphicon glyphicon-play"></span> New Game</a></li>
+            <li><a href="#" class="ga" ga-cat="link" ga-label="tictactoe navbar settings" id="show_game_options"><span class="glyphicon glyphicon-cog"></span> Settings</button></a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-stats"></span> Stats <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle ga" ga-cat="link" ga-label="tictactoe navbar stats" data-toggle="dropdown"><span class="glyphicon glyphicon-stats"></span> Stats <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#"><span id="wins" class="label label-success pull-right">0</span><span class="glyphicon glyphicon-thumbs-up"></span> Wins</a></li>
-                <li><a href="#"><span id="losses" class="label label-danger pull-right">0</span><span class="glyphicon glyphicon-thumbs-down"></span> Losses</a></li>
-                <li><a href="#"><span id="draws" class="label label-default pull-right">0</span><span class="glyphicon glyphicon-random"></span> Draws</a></li>
+                <li><a href="#" class="ga" ga-cat="link" ga-label="tictactoe navbar wins"><span id="wins" class="label label-success pull-right">0</span><span class="glyphicon glyphicon-thumbs-up"></span> Wins</a></li>
+                <li><a href="#" class="ga" ga-cat="link" ga-label="tictactoe navbar losses"><span id="losses" class="label label-danger pull-right">0</span><span class="glyphicon glyphicon-thumbs-down"></span> Losses</a></li>
+                <li><a href="#" class="ga" ga-cat="link" ga-label="tictactoe navbar draws"><span id="draws" class="label label-default pull-right">0</span><span class="glyphicon glyphicon-random"></span> Draws</a></li>
                 <li class="divider"></li>
-                <li><a id="reset_stats" href="#"><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
+                <li><a id="reset_stats" class="ga" ga-cat="link" ga-label="tictactoe navbar reset stats" href="#"><span class="glyphicon glyphicon-refresh"></span> Reset</a></li>
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> Extras <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle ga" ga-cat="link" ga-label="tictactoe navbar extras" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> Extras <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="https://github.com/michaelstuder/tictactoe" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> View on GitHub</a></li>
+                <li><a href="https://github.com/michaelstuder/tictactoe" target="_blank" class=" ga" ga-cat="link" ga-label="tictactoe navbar github"><span class="glyphicon glyphicon-eye-open"></span> View on GitHub</a></li>
               </ul>
             </li>
           </ul>
@@ -62,7 +62,7 @@
     <div id="content">
       <div id="welcome">
         <div class="alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe close welcome alert" data-dismiss="alert" aria-hidden="true">&times;</button>
           <h2><span class="glyphicon glyphicon-comment"></span> Welcome</h2>
           <p>Welcome to Tic Tac Toe.  The goal of this game is to get three of your &quot;marks&quot; in a row either horizontally, vertically or diagonally.</p>
           <p>You can configure game options and view your statistics in the navigation bar at the top of the page.</p>
@@ -100,7 +100,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe gameover modal x" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel"><span id="game_over_icon"></span> Game Over</h4>
           </div>
           <div class="modal-body">
@@ -108,8 +108,8 @@
             <p id="game_over_message"></p>
           </div>
           <div class="modal-footer">
-            <button type="button" id="play_again" class="start_game btn btn-primary">Play Again</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="play_again" class="start_game btn btn-primary ga" ga-cat="button" ga-label="tictactoe gameover modal play again">Play Again</button>
+            <button type="button" class="btn btn-default ga" ga-cat="button" ga-label="tictactoe gameover modal close" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe settings modal x" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-cog"></span> Game Options</h4>
           </div>
           <div class="modal-body">
@@ -156,7 +156,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" id="play_again" class="start_game btn btn-primary">Apply</button>
+            <button type="button" id="play_again" class="start_game btn btn-primary ga" ga-cat="button" ga-label="tictactoe settings modal apply">Apply</button>
           </div>
         </div>
       </div>
