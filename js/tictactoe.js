@@ -83,7 +83,7 @@ $(document).ready(function() {
   var end_game = function() {
     set_player('no one');
     render_stats();
-    $('#game_over_modal').modal('show');
+    $('#game_over_modal').modal({ backdrop: 'static', show: true });
   }
 
   // reset the game board
@@ -157,7 +157,7 @@ $(document).ready(function() {
 
   // settings button click
   $('#show_game_options').on('click', function(e) {
-    $('#game_options_modal').modal('show');
+    $('#game_options_modal').modal({ backdrop: 'static', show: true });
   });
 
   // begin game click
