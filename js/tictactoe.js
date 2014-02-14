@@ -288,11 +288,8 @@ $(document).ready(function() {
 
   // recursive search using alpha/beta pruning to determine the bext possible move for the given marker
   var find_best_move = function(board, marker, depth, alpha, beta) {
-    // determine all possible moves remaining and if there are none we return a draw
+    // determine all possible moves remaining
     var moves = get_remaining_moves(board);
-    if (moves.length === 0) {
-      return 0;
-    }
 
     // if this board is a win scenario weigh it best/worst depending on which marker wins and how deep we are
     // alpha is our best possible move, beta is our worst
@@ -301,6 +298,12 @@ $(document).ready(function() {
     } else if (is_winner(board, opponent_marker(marker))) {
       return -ab_max + depth;
     }
+
+    // if there are no moves remaining we return a draw
+    if (moves.length === 0) {
+      return 0;
+    }
+
 
     // keep track of the best move we can find
     var best_move = [];
