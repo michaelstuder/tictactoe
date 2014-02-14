@@ -1,37 +1,99 @@
+// * * * * * * * * * * * * * * * * * * * //
+// Tic Tac Toe
+// Author: Michael Studer (michael@studer.us)
+// Date: 2014-02-14
+// Description:  A tic-tac-toe game with unbeatable AI
+
 $(document).ready(function() {
 
-  // game options object
+  // * * * * * * * * * * * * * * * * * * * //
+  // variables and configurations
+
+  // game options object (with defaults)
   var game_options = {
     first_player: 'x',
     player_marker: 'x',
     ai_marker: 'o',
     difficulty: '90'
   };
+  
   // game record object (keep track of player record)
   var game_record = {
     wins: 0,
     losses: 0,
     draws: 0
   }
-  // our current game board
+  
+  // the game board
   var current_game_board = [
     ['empty','empty','empty'],
     ['empty','empty','empty'],
     ['empty','empty','empty']
   ];
-  // keep track of who's turn it currently is
+
+  // the current player who is taking a turn
   var current_player = 'no one';
 
-  // read game options and store locally
+
+  // * * * * * * * * * * * * * * * * * * * //
+  // basic game mechanics for starting/ending/etc games
+
+  // read in the user selected game options
   var load_game_options = function() {
     game_options['player_marker'] = $('input[name=player_marker]:checked').val();
     game_options['ai_marker'] = opponent_marker(game_options['player_marker']);
     game_options['first_player'] = $('input[name=first_marker]:checked').val();
     game_options['difficulty'] = $('#difficulty').val();
+    
+    // update some display components based on options
     $('#current_difficulty').html('Opponent difficulty: ' + $('#difficulty option:selected').text());
     $('#player_marker_display').html(game_options['player_marker'].toUpperCase());
     $('#player_marker_display').removeClass(game_options['ai_marker']);
     $('#player_marker_display').addClass(game_options['player_marker']);
+  };
+
+  // start a new game
+  var start_game = function() {
+    // load the game options
+    load_game_options();
+
+    // see if we need to determine a random player to start
+    if (game_options['first_player'] === 'random') {
+      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
+    }
+
+    // set the current player
+    if (game_options['player_marker'] === game_options['first_player']) {
+      set_player('player');
+    } else {
+      set_player('ai');
+    }
+
+    // clear the current game board
+    reset_game();
+    $('#game').show();
+
+    // determine who takes the first move
+    if (!is_player_turn()) {
+      ai_take_turn();
+    }
+  };
+
+  // end a game and show the results
+  var end_game = function() {
+    set_player('no one');
+    render_stats();
+    $('#game_over_modal').modal('show');
+  }
+
+  // reset the game board
+  var reset_game = function() {
+    current_game_board = [
+      ['empty','empty','empty'],
+      ['empty','empty','empty'],
+      ['empty','empty','empty']
+    ];
+    render_game_board();
   };
 
 
@@ -63,23 +125,6 @@ $(document).ready(function() {
     }
   };
 
-  // render the current statistics
-  var render_stats = function() {
-    $.each(game_record, function(stat, value) {
-      $('#' + stat).html(value);
-    });
-  }
-
-  // reset the game board
-  var reset_game = function() {
-    current_game_board = [
-      ['empty','empty','empty'],
-      ['empty','empty','empty'],
-      ['empty','empty','empty']
-    ];
-    render_game_board();
-  };
-
   // debugging to dump out the current state of the game to the console
   var dump_game_board = function(board) {
     for (y = 0; y < board.length; ++y) {
@@ -88,52 +133,37 @@ $(document).ready(function() {
     }
   };
 
-
-  // * * * * * * * * * * * * * * * * * * * //
-  // starting/ending a game
-
-  // start a new game
-  var start_game = function() {
-    // load the game options
-    load_game_options();
-
-    // see if we need to determine a random player to start
-    if (game_options['first_player'] === 'random') {
-      game_options['first_player'] = ['x', 'o'][Math.floor((Math.random() * 2))];
-    }
-
-    // set the current player
-    if (game_options['player_marker'] === game_options['first_player']) {
-      set_player('player');
-    } else {
-      set_player('ai');
-    }
-
-    reset_game();
-    $('#game').show();
-
-    if (!is_player_turn()) {
-      ai_take_turn();
-    }
-  };
-
-  // end a game and show the "play again" options
-  var end_game = function() {
-    set_player('no one');
-    render_stats();
-    $('#game_over_modal').modal('show');
+  // render the current statistics
+  var render_stats = function() {
+    $.each(game_record, function(stat, value) {
+      $('#' + stat).html(value);
+    });
   }
 
-  // play again button click
+
+  // * * * * * * * * * * * * * * * * * * * //
+  // user interaction event handling
+
+  // player clicks game space
+  $('#game td').on('click', function(e) {
+    if (!is_player_turn()) {
+      alert('It is not your turn!');
+    } else if ($(this).hasClass('empty')) {
+      player_move($(this).attr('y'), $(this).attr('x'));
+    } else {
+      alert('This space has already been played!');
+    }
+  });
+
+  // settings button click
   $('#show_game_options').on('click', function(e) {
     $('#game_options_modal').modal('show');
   });
 
-  // begin game button click
+  // begin game click
   $(document).on('click', '.start_game', function(e) {
     $('#game_options_modal').modal('hide');
     $('#game_over_modal').modal('hide');
-
     start_game();
   });
 
@@ -153,12 +183,20 @@ $(document).ready(function() {
   // * * * * * * * * * * * * * * * * * * * //
   // keeping track of game moves & progress
 
+  // set who the current player is
+  var set_player = function(player) {
+    current_player = player;
+    var message = current_player === 'ai' ? "Opponent is thinking..." : "It is your turn!";
+    message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game">Play Again</a>' : message;
+    $('#current_player').html(message);
+  }
+
   // return whether or not it is the players turn
   var is_player_turn = function() {
     return (current_player === 'player');
   };
 
-  // check to see if the givem marker has won the game
+  // check to see if the given marker has won the game
   var is_winner = function(board, marker) {
     // check diagonally
     if (board[0][0] === marker && board[1][1] === marker && board[2][2] === marker) {
@@ -180,18 +218,18 @@ $(document).ready(function() {
     return false;
   };
 
-  // record a specific move for a given marker
-  var record_move = function(y, x, marker) {
-    current_game_board[y][x] = marker;
-    render_game_board();
-  };
-
-  // set who the current player is
-  var set_player = function(player) {
-    current_player = player;
-    var message = current_player === 'ai' ? "Opponent is thinking..." : "It is your turn!";
-    message = current_player === 'no one' ? 'Game over! <a href="#" class="start_game">Play Again</a>' : message;
-    $('#current_player').html(message);
+  // check through a board and return a list of remaining moves
+  var get_remaining_moves = function(board) {
+    moves = [];
+    for (y = 0; y < board.length; ++y) {
+      row = board[y];
+      for (x = 0; x < row.length; ++x) {
+        if (row[x] === 'empty') {
+          moves.push([y,x]);
+        }
+      }
+    }
+    return moves;
   }
 
   // player win scenario
@@ -221,6 +259,12 @@ $(document).ready(function() {
     end_game();
   }
 
+  // record a specific move for a given marker
+  var record_move = function(y, x, marker) {
+    current_game_board[y][x] = marker;
+    render_game_board();
+  };
+
   // record a player move
   var player_move = function(y, x) {
     record_move(y, x, game_options['player_marker']);
@@ -234,41 +278,19 @@ $(document).ready(function() {
     }
   };
 
-  // player clicks empty cell
-  $('.empty').on('click', function(e) {
-    if (is_player_turn()) {
-      if ($(this).hasClass('empty')) {
-        player_move($(this).attr('y'), $(this).attr('x'));
-      } else {
-        alert('This space is already taken!');
-      }
-    } else {
-      alert('It is not your turn!');
-    }
-  });
+  // get the mopponent's marker for the given marker
+  var opponent_marker = function(marker) {
+    return marker === 'x' ? 'o' : 'x';
+  }
 
 
   // * * * * * * * * * * * * * * * * * * * //
-  // Game moves - AI
+  // artificial intelligence
 
   // alpha/beta max (for scoring best moves)
   var ab_max = 100;
 
-  // check through a board and return a list of remaining moves
-  var get_remaining_moves = function(board) {
-    moves = [];
-    for (y = 0; y < board.length; ++y) {
-      row = board[y];
-      for (x = 0; x < row.length; ++x) {
-        if (row[x] === 'empty') {
-          moves.push([y,x]);
-        }
-      }
-    }
-    return moves;
-  }
-
-  // look at all available spaces remaining and select one at ramdom
+  // look at all available spaces remaining and select one at random
   var ai_make_random_move = function() {
     var moves = get_remaining_moves(current_game_board);
     var move = moves[Math.floor((Math.random() * moves.length))];
@@ -287,11 +309,6 @@ $(document).ready(function() {
       ai_move(move[0], move[1]);
     }
   };
-
-  // get the mopponent's marker for the given marker
-  var opponent_marker = function(marker) {
-    return marker === 'x' ? 'o' : 'x';
-  }
 
   // recursive search using alpha/beta pruning to determine the bext possible move for the given marker
   var find_best_move = function(board, marker, depth, alpha, beta) {
@@ -377,7 +394,10 @@ $(document).ready(function() {
     }
   };
 
+
+  // * * * * * * * * * * * * * * * * * * * //
   // once the page has loaded start a game with the default settings
+  
   start_game();
 
 });
