@@ -16,14 +16,14 @@ $(document).ready(function() {
     ai_marker: 'o',
     difficulty: '90'
   };
-  
+
   // game record object (keep track of player record)
   var game_record = {
     wins: 0,
     losses: 0,
     draws: 0
   }
-  
+
   // the game board
   var current_game_board = [
     ['empty','empty','empty'],
@@ -44,7 +44,7 @@ $(document).ready(function() {
     game_options['ai_marker'] = opponent_marker(game_options['player_marker']);
     game_options['first_player'] = $('input[name=first_marker]:checked').val();
     game_options['difficulty'] = $('#difficulty').val();
-    
+
     // update some display components based on options
     $('#current_difficulty').html('Opponent difficulty: ' + $('#difficulty option:selected').text());
     $('#player_marker_display').html(game_options['player_marker'].toUpperCase());
@@ -274,7 +274,10 @@ $(document).ready(function() {
       player_draws();
     } else {
       set_player('ai');
-      ai_take_turn();
+      // delay the AI move slightly to give the user a sense that their opponent is actually "thinking"
+      setTimeout(function() {
+        ai_take_turn();
+      }, 150);
     }
   };
 
@@ -397,7 +400,7 @@ $(document).ready(function() {
 
   // * * * * * * * * * * * * * * * * * * * //
   // once the page has loaded start a game with the default settings
-  
+
   start_game();
 
 });
