@@ -401,6 +401,8 @@ $(document).ready(function() {
   // * * * * * * * * * * * * * * * * * * * //
   // once the page has loaded start a game with the default settings
 
-  start_game();
+  setTimeout(function() {
+    start_game();
+  }, 1000);
 
 });
