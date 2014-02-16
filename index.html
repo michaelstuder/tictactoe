@@ -49,7 +49,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle ga" ga-cat="link" ga-label="tictactoe navbar extras" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> Extras <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="https://github.com/michaelstuder/tictactoe" target="_blank" class=" ga" ga-cat="link" ga-label="tictactoe navbar github"><span class="glyphicon glyphicon-eye-open"></span> View on GitHub</a></li>
+                <li><a href="https://github.com/michaelstuder/tictactoe" target="_blank" class=" ga" ga-cat="link" ga-label="tictactoe navbar github"><span class="glyphicon glyphicon-eye-open"></span> View Source Code on GitHub</a></li>
               </ul>
             </li>
           </ul>
@@ -124,21 +124,21 @@
           </div>
           <div class="modal-body">
             <div id="options">
-              <p>Please configure your game options below.</p>
               <table class="options_table table">
+                <thead><th colspan="2">Available configuration options:</th></thead>
                 <tr class="options_row">
                   <td class="options_label">Your Marker:</td>
                   <td class="options_data">
-                    <input type="radio" name="player_marker" checked="true" value="x" /> X
-                    <input type="radio" name="player_marker" value="o" /> O
+                    <input type="radio" name="player_marker" checked="true" value="x" /> <span class="x marker_config">X</span>
+                    <input type="radio" name="player_marker" value="o" /> <span class="o marker_config">O</span>
                   </td>
                 </tr>
                 <tr class="options_row">
                   <td class="options_label">Who Goes First?</td>
                   <td class="options_data">
-                    <input type="radio" name="first_marker" value="x" /> X
-                    <input type="radio" name="first_marker" value="o" /> O
-                    <input type="radio" name="first_marker" checked="true" value="random" /> Random
+                    <input type="radio" name="first_marker" value="x" /> <span class="x marker_config">X</span>
+                    <input type="radio" name="first_marker" value="o" /> <span class="o marker_config">O</span>
+                    <input type="radio" name="first_marker" checked="true" value="random" /> <span class="marker_config_random">Random</span>
                   </td>
                 </tr>
                 <tr class="options_row">

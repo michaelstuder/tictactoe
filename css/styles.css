@@ -15,5 +15,7 @@ h4 { font-size: 1.2em; margin-bottom: 5px; }
 .empty { background-image: none; cursor: 'pointer'; }
 .x { color: #b81c1c }
 .o { color: #16a939 }
+.marker_config { font-weight: bold; font-size: 18px; }
+.marker_config_random { font-size: 17px; }
 
 #thinking { display: none; }
