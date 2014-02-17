@@ -51,6 +51,7 @@
               <a href="#" class="dropdown-toggle ga" ga-cat="link" ga-label="tictactoe navbar extras" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> Extras <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="https://github.com/michaelstuder/tictactoe" target="_blank" class=" ga" ga-cat="link" ga-label="tictactoe navbar github"><span class="glyphicon glyphicon-eye-open"></span> View Source Code on GitHub</a></li>
+                <li><a id="about" href="#" class=" ga" ga-cat="link" ga-label="tictactoe navbar about"><span class="glyphicon glyphicon-question-sign"></span> About</a></li>
               </ul>
             </li>
           </ul>
@@ -102,7 +103,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe gameover modal x" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel"><span id="game_over_icon"></span> Game Over</h4>
+            <h4 class="modal-title" id="game_over_modal_label"><span id="game_over_icon"></span> Game Over</h4>
           </div>
           <div class="modal-body">
             <h2 id="game_over_title"></h2>
@@ -121,7 +122,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe settings modal x" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-cog"></span> Game Options</h4>
+            <h4 class="modal-title" id="game_options_modal_label"><span class="glyphicon glyphicon-cog"></span> Game Options</h4>
           </div>
           <div class="modal-body">
             <div id="options">
@@ -158,6 +159,27 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="play_again" class="start_game btn btn-primary ga" ga-cat="button" ga-label="tictactoe settings modal apply">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="about_modal" tabindex="-1" role="dialog" aria-labelledby="About" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close ga" ga-cat="link" ga-label="tictactoe about modal x" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="about_modal_label"><span class="glyphicon glyphicon-question-sign"></span> About the Game</h4>
+          </div>
+          <div class="modal-body">
+            <p>Written by <a href="http://michael.studer.us" class="ga" ga-cat="link" ga-label="tictactoe about modal author" target="_blank">Michael Studer</a> on 2014-02-14</p>
+            <p>This game is a simple web-based Tic-Tac-Toe game implemented in JavaScript.  It utilizes <a href="http://www.getbootstrap.com" class="ga" ga-cat="link" ga-label="tictactoe about modal getbootstrap" target="_blank">Bootstrap</a> and <a href="http://jquery.com/" class="ga" ga-cat="link" ga-label="tictactoe about modal jQuery" target="_blank">jQuery</a> on the front-end and has a JavaScript back-end.</p>
+            <p>The challenge with this project was to create an interactive game experience in which the AI could never lose.</p>
+            <p>This was accomplished by utilizing a <a href="http://en.wikipedia.org/wiki/Minimax" class="ga" ga-cat="link" ga-label="tictactoe about modal minimax" target="_blank">minimax algorithm</a> to explore at all possible future moves for a given board/player minimizing loss and maximizing gains.</p>
+            <p>In addition to the minimax algorithm, I also implemented <a href="http://en.wikipedia.org/wiki/Alpha-beta_pruning" class="ga" ga-cat="link" ga-label="tictactoe about modal alpha-beta" target="_blank">alpha/beta pruning</a> to greatly reduce computational times.  When examining any given game path, if the result is less than ideal play the entire traversal of that path is abandoned eliminating fruitless computation only to arrive at a better game path elsewhere.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary ga" ga-cat="button" ga-label="tictactoe gameover modal close" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

@@ -160,6 +160,11 @@ $(document).ready(function() {
     $('#game_options_modal').modal({ backdrop: 'static', show: true });
   });
 
+  // about button click
+  $('#about').on('click', function(e) {
+    $('#about_modal').modal({ backdrop: 'static', show: true });
+  });
+
   // begin game click
   $(document).on('click', '.start_game', function(e) {
     $('#game_options_modal').modal('hide');
